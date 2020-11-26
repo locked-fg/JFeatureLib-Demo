@@ -14,7 +14,7 @@ public class SurfDemo {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         // load the image
-        InputStream stream = SurfDemo.class.getClassLoader().getResourceAsStream("test.jpg");
+        InputStream stream = SurfDemo.class.getClassLoader().getResourceAsStream("test/dfdfd/test.jpg");
         ColorProcessor image = new ColorProcessor(ImageIO.read(stream));
 
         // initialize the descriptor
