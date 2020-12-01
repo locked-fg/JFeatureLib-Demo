@@ -1,7 +1,9 @@
 package de.lmu.dbs.ifi.jfeaturelib.examples;
 
+import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import de.lmu.ifi.dbs.jfeaturelib.features.Haralick;
 import de.lmu.ifi.dbs.jfeaturelib.features.SURF;
+import de.lmu.ifi.dbs.jfeaturelib.features.Sift;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ColorProcessor;
 
@@ -22,7 +24,7 @@ import java.util.Objects;
  *
  * @author Franz
  */
-public class SURFDemo {
+public class HaralickDemo {
 
 
     // File representing the folder that you select using a FileChooser
@@ -72,9 +74,9 @@ public class SURFDemo {
     public static void main(String[] args) throws IOException, URISyntaxException {
         Locale.setDefault(Locale.US);
 
-        FileWriter csvWriter = new FileWriter("SURF4.csv");
+        FileWriter csvWriter = new FileWriter("new.csv");
 
-        List<Path> list = SURFDemo.walk("src/main/resources/training/Mass/");
+        List<Path> list = HaralickDemo.walk("src/main/resources/training/Calc/");
 
 
         if (dir.isDirectory()) { // make sure it's a directory
@@ -85,8 +87,14 @@ public class SURFDemo {
                 InputStream stream = Files.newInputStream(f);
                 ColorProcessor image = new ColorProcessor(ImageIO.read(stream));
 
+                LibProperties prop = LibProperties.get();
+                prop.setProperty(LibProperties.HISTOGRAMS_BINS, 2);
+                prop.setProperty(LibProperties.HISTOGRAMS_TYPE, "gray");
+
                 // initialize the descriptor
-                SURF descriptor = new SURF();
+                Sift descriptor = new Sift();
+
+                descriptor.setProperties(prop);
 
                 // run the descriptor and extract the features
                 descriptor.run(image);
@@ -94,46 +102,12 @@ public class SURFDemo {
                 // obtain the features
                 List<double[]> features = descriptor.getFeatures();
 
-//                if (features.size() > 0) {
-//                    System.out.println(f.toString().substring(95, 112) + ','
-//                            + Arrays2.join(features.get(0), ",", "%.5f"));
-
-
-//                    csvWriter.write(f.toString().substring(95, 111) + ',' + Arrays2.join(features.get(0), ",", "%.5f") + '\n');
-
-//                } else {
-//                    System.out.println(f.toString().substring(95, 112) + ','
-//                            + 0.0);
-
-//                    csvWriter.write(f.toString().substring(95, 111) + ',' + 0.0 + '\n');
-
-//                }
-
-                if (features.size() > 0 && features.size() > 5) {
-
-                    features = features.subList(0, 4);
-                } else {
-                    features = features.subList(0, features.size());
-                }
-
-
-                String toShow = "";
-
-
-//              print the features to system out
+                // print the features to system out
                 for (double[] feature : features) {
-//                    System.out.println(Arrays2.join(feature, ",", "%.5f"));
-//
-//                    csvWriter.write(f.toString() + ',' + Arrays2.join(feature, ",", "%.5f") + '\n');
+                    System.out.println(Arrays2.join(feature, ",", "%.5f"));
 
-                    toShow = toShow + Arrays2.join(feature, ",", "%.5f");
-
-
+                    csvWriter.write(f.toString() + ',' + Arrays2.join(feature, ",", "%.5f") + '\n');
                 }
-
-                csvWriter.write(f.toString().substring(95, 111) + ',' + toShow + '\n');
-
-                System.out.println(toShow);
             }
         }
 
