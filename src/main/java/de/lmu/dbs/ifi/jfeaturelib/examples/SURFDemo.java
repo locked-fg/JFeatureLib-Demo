@@ -72,15 +72,15 @@ public class SURFDemo {
     public static void main(String[] args) throws IOException, URISyntaxException {
         Locale.setDefault(Locale.US);
 
-        FileWriter csvWriter = new FileWriter("SURF4.csv");
+        FileWriter csvWriter = new FileWriter("descriptors/SURF4.csv");
 
-        List<Path> list = SURFDemo.walk("src/main/resources/training/Mass/");
-
-
-        if (dir.isDirectory()) { // make sure it's a directory
+        List<Path> list = SURFDemo.walk("src/main/resources/DDSM");
 
 
-            for (Path f : Objects.requireNonNull(list)) {
+//        if (dir.isDirectory()) { // make sure it's a directory
+
+
+        for (Path f : Objects.requireNonNull(list)) {
 
                 InputStream stream = Files.newInputStream(f);
                 ColorProcessor image = new ColorProcessor(ImageIO.read(stream));
@@ -131,11 +131,11 @@ public class SURFDemo {
 
                 }
 
-                csvWriter.write(f.toString().substring(95, 111) + ',' + toShow + '\n');
+                csvWriter.write(f.toString().substring(24) + ',' + toShow + '\n');
 
                 System.out.println(toShow);
             }
-        }
+//        }
 
 //        for (File f : Objects.requireNonNull(dir.listFiles())) {
 //

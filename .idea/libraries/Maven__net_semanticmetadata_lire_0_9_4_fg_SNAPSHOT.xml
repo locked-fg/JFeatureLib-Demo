@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: net.semanticmetadata:lire:0.9.4-fg-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/semanticmetadata/lire/0.9.4-fg-SNAPSHOT/lire-0.9.4-fg-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/net/semanticmetadata/lire/0.9.4-fg-SNAPSHOT/lire-0.9.4-fg-SNAPSHOT-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/semanticmetadata/lire/0.9.4-fg-SNAPSHOT/lire-0.9.4-fg-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

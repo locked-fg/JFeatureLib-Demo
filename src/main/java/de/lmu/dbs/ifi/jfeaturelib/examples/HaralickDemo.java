@@ -1,11 +1,10 @@
 package de.lmu.dbs.ifi.jfeaturelib.examples;
 
 import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
-import de.lmu.ifi.dbs.jfeaturelib.features.Haralick;
-import de.lmu.ifi.dbs.jfeaturelib.features.SURF;
-import de.lmu.ifi.dbs.jfeaturelib.features.Sift;
+import de.lmu.ifi.dbs.jfeaturelib.features.*;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ColorProcessor;
+import net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram;
 
 import javax.imageio.ImageIO;
 import java.io.*;
@@ -28,7 +27,7 @@ public class HaralickDemo {
 
 
     // File representing the folder that you select using a FileChooser
-    static final File dir = new File("src/main/resources/training/Calc/");
+//    static final File dir = new File("src/main/resources/training/Calc/");
 
     static List<Path> paths = new ArrayList<>();
 
@@ -74,77 +73,60 @@ public class HaralickDemo {
     public static void main(String[] args) throws IOException, URISyntaxException {
         Locale.setDefault(Locale.US);
 
-        FileWriter csvWriter = new FileWriter("new.csv");
+        FileWriter csvWriter = new FileWriter("descriptors/Tamura.csv");
 
-        List<Path> list = HaralickDemo.walk("src/main/resources/training/Calc/");
-
-
-        if (dir.isDirectory()) { // make sure it's a directory
+        List<Path> list = HaralickDemo.walk("src/main/resources/images");
 
 
-            for (Path f : Objects.requireNonNull(list)) {
+        for (Path f : Objects.requireNonNull(list)) {
 
-                InputStream stream = Files.newInputStream(f);
-                ColorProcessor image = new ColorProcessor(ImageIO.read(stream));
+            InputStream stream = Files.newInputStream(f);
+            ColorProcessor image = new ColorProcessor(ImageIO.read(stream));
 
-                LibProperties prop = LibProperties.get();
-                prop.setProperty(LibProperties.HISTOGRAMS_BINS, 2);
-                prop.setProperty(LibProperties.HISTOGRAMS_TYPE, "gray");
+//            LibProperties prop = LibProperties.get();
+//            prop.setProperty(LibProperties.HISTOGRAMS_BINS, 256);
+//            prop.setProperty(LibProperties.HISTOGRAMS_TYPE, "RGB");
 
-                // initialize the descriptor
-                Sift descriptor = new Sift();
+            // initialize the descriptor
+//            AutoColorCorrelogram descriptor = new AutoColorCorrelogram();
+//            CEDD descriptor = new CEDD();
+//            ColorHistogram descriptor = new ColorHistogram();
+//            FCTH descriptor = new FCTH();
+//            FuzzyHistogram descriptor = new FuzzyHistogram();
+//            FuzzyOpponentHistogram descriptor = new FuzzyOpponentHistogram();
+//            Gabor descriptor = new Gabor();
+//            Haralick descriptor = new Haralick();
+//            Histogram descriptor = new Histogram();
+//            JCD descriptor = new JCD();
+//            JpegCoefficientHistogram descriptor = new JpegCoefficientHistogram();
+//            LocalBinaryPatterns descriptor = new LocalBinaryPatterns();
+//            LuminanceLayout descriptor = new LuminanceLayout();
+//            MeanIntensityLocalBinaryPatterns descriptor = new MeanIntensityLocalBinaryPatterns();
+//            Moments descriptor = new Moments();
+//            MPEG7ColorLayout descriptor = new MPEG7ColorLayout();
+//            MPEG7EdgeHistogram descriptor = new MPEG7EdgeHistogram();
+//            OpponentHistogram descriptor = new OpponentHistogram();
+//            PHOG descriptor = new PHOG();
+//            SimpleColorHistogram descriptor = new SimpleColorHistogram();
+            Tamura descriptor = new Tamura();
 
-                descriptor.setProperties(prop);
+//            descriptor.setProperties(prop);
 
-                // run the descriptor and extract the features
-                descriptor.run(image);
+            // run the descriptor and extract the features
+            descriptor.run(image);
 
-                // obtain the features
-                List<double[]> features = descriptor.getFeatures();
+            // obtain the features
+            List<double[]> features = descriptor.getFeatures();
 
-                // print the features to system out
-                for (double[] feature : features) {
-                    System.out.println(Arrays2.join(feature, ",", "%.5f"));
+            // print the features to system out
+            for (double[] feature : features) {
+//                System.out.println(f.toString().substring(24) + " - " + Arrays2.join(feature, ",", "%.5f"));
+                System.out.println(f.toString().substring(26));
 
-                    csvWriter.write(f.toString() + ',' + Arrays2.join(feature, ",", "%.5f") + '\n');
-                }
+                csvWriter.write(f.toString().substring(26) + ',' + Arrays2.join(feature, ",", "%.5f") + '\n');
             }
         }
 
-//        for (File f : Objects.requireNonNull(dir.listFiles())) {
-//
-//            try {
-//                for (File f1 : f.listFiles()) {
-//                    for (File f2 : f1.listFiles()) {
-//                        InputStream stream = Files.newInputStream(f2.toPath());
-//                        assert stream != null;
-//                        ColorProcessor image = new ColorProcessor(ImageIO.read(stream));
-//
-//                        // initialize the descriptor
-//                        Haralick descriptor = new Haralick();
-//
-//                        // run the descriptor and extract the features
-//                        descriptor.run(image);
-//
-//                        // obtain the features
-//                        List<double[]> features = descriptor.getFeatures();
-//
-//
-//                        // print the features to system out
-//                        for (double[] feature : features) {
-//                            System.out.println(Arrays2.join(feature, ",", "%.5f"));
-//
-//                            csvWriter.write(f.toString() + ',' + Arrays2.join(feature, ",", "%.5f") + '\n');
-//                        }
-//                    }
-//                }
-//
-//
-//            } catch (final IOException e) {
-////                    // handle errors here
-//            }
-//
-//        }
         csvWriter.flush();
         csvWriter.close();
     }
