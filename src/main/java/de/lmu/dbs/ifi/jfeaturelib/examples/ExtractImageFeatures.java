@@ -69,7 +69,7 @@ public class ExtractImageFeatures {
     public static void main(String[] args) throws IOException, URISyntaxException {
         Locale.setDefault(Locale.US);
 
-        FileWriter csvWriter = new FileWriter("descriptors/LocalBinaryPatterns .csv");
+        FileWriter csvWriter = new FileWriter("descriptors/AutoColorCorrelogram .csv");
 
         List<Path> list = ExtractImageFeatures.walk("/Users/jjmacagnan/Documents/Jasiel/Databases/aPascal & aYahoo Datasets/bbox_images");
 

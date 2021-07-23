@@ -15,3 +15,6 @@
 /nbactions-sonatype-oss-release.xml
 /nbproject/
 /src/main/resources
+
+# MacOS
+.DS_Store

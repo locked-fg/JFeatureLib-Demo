@@ -1,10 +1,11 @@
 package de.lmu.dbs.ifi.jfeaturelib.examples;
 
-import de.lmu.ifi.dbs.jfeaturelib.features.*;
+import de.lmu.ifi.dbs.jfeaturelib.LibProperties;
 import de.lmu.ifi.dbs.utilities.Arrays2;
 import ij.process.ColorProcessor;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -47,7 +48,7 @@ public class ExtractImageFeatures2 {
     public static List<Path> walk(String path) {
 
         File root = new File(path);
-        File[] list = root.listFiles();
+        File[] list = root.listFiles(IMAGE_FILTER);
 
 
         assert list != null;
@@ -70,78 +71,65 @@ public class ExtractImageFeatures2 {
         Locale.setDefault(Locale.US);
 
 
-
-        List<Path> list = ExtractImageFeatures2.walk("/Users/jjmacagnan/Documents/Jasiel/Databases/aPascal & aYahoo Datasets/bbox_images");
+        List<Path> list = ExtractImageFeatures2.walk("/Users/jjmacagnan/Documents/Jasiel/Databases/mammoset/images_raw/DDSM_TRAIN");
 
         Collections.sort(list);
 
-        Descritores descritores = new Descritores();
+        for (int i = 0; i < 19; i++) {
 
-//        ArrayList<Descritores> listDescriptors = new ArrayList<>();
-//        listDescriptors = (ArrayList<Descritores>) descritores.getData();
-//        descritores.getData();
-
-
-        // initialize the descriptor
-//        AutoColorCorrelogram autoColorCorrelogram = new AutoColorCorrelogram();
-//        listDescriptors.add(autoColorCorrelogram);
-//        CEDD cedd = new CEDD();
-//        listDescriptors.add(cedd);
-//            ColorHistogram colorHistogram = new ColorHistogram();
-//            FCTH fcth = new FCTH();
-//            FuzzyHistogram fuzzyHistogram = new FuzzyHistogram();
-//            FuzzyOpponentHistogram fuzzyOpponentHistogram = new FuzzyOpponentHistogram();
-//            Gabor gabor = new Gabor();
-//            Haralick haralick = new Haralick();
-//            Histogram histogram = new Histogram();
-//            JCD jcd = new JCD();
-//            JpegCoefficientHistogram jpegCoefficientHistogram = new JpegCoefficientHistogram();
-//            LocalBinaryPatterns localBinaryPatterns = new LocalBinaryPatterns();
-//            LuminanceLayout luminanceLayout = new LuminanceLayout();
-//            MeanIntensityLocalBinaryPatterns meanIntensityLocalBinaryPatterns = new MeanIntensityLocalBinaryPatterns();
-//            Moments moments = new Moments();
-//            MPEG7ColorLayout mpeg7ColorLayout = new MPEG7ColorLayout();
-//            MPEG7EdgeHistogram mpeg7EdgeHistogram = new MPEG7EdgeHistogram();
-//            OpponentHistogram opponentHistogram = new OpponentHistogram();
-//            PHOG phog = new PHOG();
-//            Tamura tamura = new Tamura();
-
-        for (int i = 0; i < descritores.getData().size(); i++) {
-
-            FileWriter csvWriter = new FileWriter("descriptors2/AutoColorCorrelogram.csv");
+            FileWriter csvWriter = new FileWriter("descriptors2/" + NameDescriptor.getName(i) + ".csv");
 
 
             for (Path f : Objects.requireNonNull(list)) {
 
+                Descriptors descriptors = new Descriptors();
+
+                descriptors.setDescriptor(NameDescriptor.getName(i));
+
                 InputStream stream = Files.newInputStream(f);
                 ColorProcessor image = new ColorProcessor(ImageIO.read(stream));
 
-//            LibProperties prop = LibProperties.get();
-//            prop.setProperty(LibProperties.HISTOGRAMS_BINS, 256);
-//            prop.setProperty(LibProperties.HISTOGRAMS_TYPE, "RGB");
+//                System.out.println(descriptors.getNameDescriptor(i));
+
+                if (descriptors.getNameDescriptor(i).equals(String.valueOf(NameDescriptor.ColorHistogram)) ||
+                        descriptors.getNameDescriptor(i).equals(String.valueOf(NameDescriptor.Histogram))) {
+
+                    LibProperties prop = LibProperties.get();
+                    prop.setProperty(LibProperties.HISTOGRAMS_BINS, 256);
+                    prop.setProperty(LibProperties.HISTOGRAMS_TYPE, "RGB");
 
 
-//            descriptor.setProperties(prop);
+                    descriptors.getDescriptor().setProperties(prop);
+                }
+
 
                 // run the descriptor and extract the features
 
-                descritores.getData().get(i).run(image);
+                descriptors.getDescriptor().run(image);
 
                 // obtain the features
-                List<double[]> features = descritores.getData().get(i).getFeatures();
+                List<double[]> features = descriptors.getDescriptor().getFeatures();
 
 //                 print the features to system out
                 for (double[] feature : features) {
 //                System.out.println(f.toString().substring(24) + " - " + Arrays2.join(feature, ",", "%.5f"));
-                    System.out.println(f.toString().substring(83));
+                    System.out.println(f.toString().substring(76));
 
-                    csvWriter.write(f.toString().substring(83) + ',' + Arrays2.join(feature, ",", "%.5f") + '\n');
+                    csvWriter.write(f.toString().substring(76) + ',' + Arrays2.join(feature, ",", "%.5f") + '\n');
                 }
+
+                csvWriter.flush();
+                stream.close();
             }
 
 
+//            csvWriter.
             csvWriter.flush();
             csvWriter.close();
+
+//            JOptionPane.showMessageDialog(null, NameDescriptor.getName(i)+".csv successfully created");
+
+            System.out.println(NameDescriptor.getName(i)+".csv successfully created");
 
         }
     }

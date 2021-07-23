@@ -10,10 +10,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 
 /**
@@ -72,27 +69,29 @@ public class SURFDemo {
     public static void main(String[] args) throws IOException, URISyntaxException {
         Locale.setDefault(Locale.US);
 
-        FileWriter csvWriter = new FileWriter("descriptors/SURF4.csv");
+        FileWriter csvWriter = new FileWriter("descriptors/SURF1.csv");
 
-        List<Path> list = SURFDemo.walk("src/main/resources/DDSM");
+        List<Path> list = SURFDemo.walk("/Users/jjmacagnan/Documents/Jasiel/Databases/aPascal & aYahoo Datasets/bbox_images");
 
 
 //        if (dir.isDirectory()) { // make sure it's a directory
 
+        Collections.sort(list);
+
 
         for (Path f : Objects.requireNonNull(list)) {
 
-                InputStream stream = Files.newInputStream(f);
-                ColorProcessor image = new ColorProcessor(ImageIO.read(stream));
+            InputStream stream = Files.newInputStream(f);
+            ColorProcessor image = new ColorProcessor(ImageIO.read(stream));
 
-                // initialize the descriptor
-                SURF descriptor = new SURF();
+            // initialize the descriptor
+            SURF descriptor = new SURF();
 
-                // run the descriptor and extract the features
-                descriptor.run(image);
+            // run the descriptor and extract the features
+            descriptor.run(image);
 
-                // obtain the features
-                List<double[]> features = descriptor.getFeatures();
+            // obtain the features
+            List<double[]> features = descriptor.getFeatures();
 
 //                if (features.size() > 0) {
 //                    System.out.println(f.toString().substring(95, 112) + ','
@@ -109,32 +108,45 @@ public class SURFDemo {
 
 //                }
 
-                if (features.size() > 0 && features.size() > 5) {
+            if (features.size() == 0) {
+                System.out.println(f.toString());
+            }
 
-                    features = features.subList(0, 4);
-                } else {
-                    features = features.subList(0, features.size());
-                }
+            features = Collections.singletonList(features.get(0));
 
 
-                String toShow = "";
+
+//            if (features.size() > 1) {
+//
+//                features = features.subList(0, 1);
+//            } else {
+//                features = features.subList(0, features.size());
+//                System.out.println("Size: " + features.size());
+//                System.out.println("Parou: " + f.toString());
+//                break;
+//            }
+
+
+            String toShow = "";
 
 
 //              print the features to system out
-                for (double[] feature : features) {
+            for (double[] feature : features) {
 //                    System.out.println(Arrays2.join(feature, ",", "%.5f"));
 //
 //                    csvWriter.write(f.toString() + ',' + Arrays2.join(feature, ",", "%.5f") + '\n');
 
-                    toShow = toShow + Arrays2.join(feature, ",", "%.5f");
+                toShow = toShow + Arrays2.join(feature, ",", "%.5f");
+
+//                    System.out.println(f.toString().substring(83));
 
 
-                }
-
-                csvWriter.write(f.toString().substring(24) + ',' + toShow + '\n');
-
-                System.out.println(toShow);
             }
+
+            csvWriter.write(f.toString().substring(83) + ',' + toShow + '\n');
+
+            System.out.println(toShow);
+        }
 //        }
 
 //        for (File f : Objects.requireNonNull(dir.listFiles())) {
