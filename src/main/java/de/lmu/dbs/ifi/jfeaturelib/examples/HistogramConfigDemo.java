@@ -20,7 +20,7 @@ public class HistogramConfigDemo {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         // load the image
-        InputStream stream = HistogramConfigDemo.class.getClassLoader().getResourceAsStream("test.jpg");
+        InputStream stream = HistogramConfigDemo.class.getClassLoader().getResourceAsStream("test/dfdfd/test.jpg");
         ColorProcessor image = new ColorProcessor(ImageIO.read(stream));
 
         // load the properties from the default properties file
